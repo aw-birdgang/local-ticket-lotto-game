@@ -1,0 +1,96 @@
+@startuml
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+left to right direction
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+title 'TICKET' Lottery Game Service ERD
+
+
+
+
+table( ticket_currency )  {
+    primary_key( id ) : long
+    column( currency_code ) : varchar
+    column( amount ) : int
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( ticket )  {
+    primary_key( id ) : long
+    column( creator_id ) : long
+    column( create_date ) : datetime
+    column( status ) : varchar
+    column( owner_id ) : long
+    column( ticket_currency_id ) : long
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( empty_ticket )  {
+    primary_key( id ) : long
+    column( ticket_currency_id ) : long
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( issued_ticket )  {
+    primary_key( ticket_id ) : long
+    foreign_key( round_id ) : long
+    foreign_key( issuer_id ) : long
+    column( issue_date ) : datetime
+    column( ball_1 ): tinyint
+    column( ball_2 ): tinyint
+    column( ball_3 ): tinyint
+    column( ball_4 ): tinyint
+    column( ball_5 ): tinyint
+    column( ball_6 ): tinyint
+    column( expire_date ) : datetime
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( winning_ticket ) {
+    primary_key( ticket_id ) : long
+    foreign_key( round_id ) : long
+    foreign_key( winner_id ) : long
+    column( ranking ): int
+    column( expire_date ) : datetime
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+
+table( ticket_transaction )  {
+    primary_key( id ) : long
+    column( transaction_date ) : datetime
+    column( transaction_type ) : varchar
+    column( from_id ) : long
+    column( to_id ) : long
+    column( quantity ) : smallint
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+
+empty_ticket::id ||--|| ticket::id
+
+ticket_currency::id ||--|| empty_ticket::ticket_currency_id
+ticket_currency::id ||--|| ticket::ticket_currency_id
+
+ticket::id ||--|| issued_ticket::ticket_id
+ticket::id ||--|| winning_ticket::ticket_id
+ticket::id ||--|| ticket_transaction::ticket_id
+
+@enduml

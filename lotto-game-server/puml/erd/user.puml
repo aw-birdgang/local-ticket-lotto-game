@@ -1,0 +1,69 @@
+@startuml
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+left to right direction
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+title 'USER' Lottery Game Service ERD
+
+table( company ) {
+    primary_key( id ) : long
+    column( name ): varchar
+}
+
+table( manager ) {
+    primary_key( id ) : long
+    foreign_key( company_id ) : long
+    column( name ): varchar
+    column( grade ): smallint
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( agent ) {
+    primary_key( id ) : long
+    column( name ): varchar
+    column( depth ): smallint
+    column( parent_id ): long
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( seller ) {
+    primary_key( id ) : long
+    foreign_key( agent_id ) : long
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( player ) {
+    primary_key( id ) : long
+    column( user_type ): varchar
+    column( username ): varchar
+    column( password_hash ): varchar
+    column( email ): varchar
+    column( email_verified ): tinyint
+    column( phone_number ): varchar
+    column( phone_verified ): tinyint
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+company::id ||--|{ manager::company_id
+
+agent::id ||--|{ seller::id
+seller::id ||--|{ player::id
+
+
+
+@enduml

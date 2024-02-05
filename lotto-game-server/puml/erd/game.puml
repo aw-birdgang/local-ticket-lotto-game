@@ -1,0 +1,102 @@
+@startuml
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+left to right direction
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+title 'GAME' Lottery Game Service ERD
+
+
+
+table( game )  {
+    primary_key( id ) : long
+    column( name ): varchar
+    column( type ): varchar
+    column( cycle ): int
+}
+
+table( round ) {
+    primary_key( id ) : long
+    foreign_key( game_id ) : long
+    column( start_date ) : datetime
+    column( end_date ) : datetime
+    column( status ): tinyint
+    foreign_key( rule_id ) : long
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+
+table( winning_number ) {
+    primary_key( round_id ) : long
+    column( ball_1 ): tinyint
+    column( ball_2 ): tinyint
+    column( ball_3 ): tinyint
+    column( ball_4 ): tinyint
+    column( ball_5 ): tinyint
+    column( ball_6 ): tinyint
+    column( ball_bonus ): tinyint
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+
+
+table( batch_job )  {
+    primary_key( id ) : long
+    column( worker_id ) : long
+    column( start_date ) : datetime
+    column( game_id ) : long
+    foreign_key( round_id ) : long
+    column( end_date ) : datetime
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( batch_round_aggregation )  {
+    primary_key( round_id ) : long
+    foreign_key( batch_job_id ) : long
+    column( total_ticket_quantity ) : int
+    column( total_ticket_amount ) : int
+    column( winning_amount ) : int
+    column( donation_amount ) : int
+    column( commission_amount ) : int
+    column( operating_amount ) : int
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( batch_winning_ranking )  {
+    primary_key( round_id ) : long
+    primary_key( ranking ) : long
+    foreign_key( batch_job_id ) : long
+    column( total_amount ) : int
+    column( total_quantity ) : int
+    column( one_ticket_amount ) : int
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+
+
+
+game::id ||--|{ round::game_id
+
+round::id ||--|| batch_job::round_id
+round::id ||--|| winning_number::round_id
+
+batch_job::id ||--|| batch_round_aggregation::batch_job_id
+batch_job::id ||--|| batch_winning_ranking::batch_job_id
+
+
+@enduml

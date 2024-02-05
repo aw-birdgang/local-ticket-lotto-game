@@ -1,0 +1,186 @@
+@startgantt
+
+<style>
+ganttDiagram {
+  task {
+    BackGroundColor GreenYellow
+    LineColor Green
+    unstated {
+      BackGroundColor Fuchsia
+      LineColor FireBrick
+    }
+  }
+}
+</style>
+
+
+projectscale monthly zoom 4
+
+Project starts 2023-05-01
+
+
+[plan 1.0] is colored in Yellow/LightBlue
+[plan 1.0] starts 2023-05-01
+[plan 1.0] lasts 70 days
+
+
+
+
+[plan app ui/ux (player)] is colored in Yellow/LightBlue
+[plan app ui/ux (player)] starts 2023-07-16
+[plan app ui/ux (player)] lasts 40 days
+
+[design app guide (player)] is colored in GreenYellow/Green
+[design app guide (player)] starts 2023-08-7
+[design app guide (player)] lasts 40 days
+
+[dev app guide (player)] is colored in Lavender/Green
+[dev app guide (player)] starts 2023-09-01
+[dev app guide (player)] lasts 50 days
+
+[test app guide (player)] is colored in Fuchsia/FireBrick
+[test app guide (player)] starts 2023-09-30
+[test app guide (player)] lasts 35 days
+
+[dev app ui/ux (player)] is colored in Lavender/Green
+[dev app ui/ux (player)] starts 2023-08-12
+[dev app ui/ux (player)] lasts 60 days
+
+[test app ui/ux (player)] is colored in Fuchsia/FireBrick
+[test app ui/ux (player)] starts 2023-09-12
+[test app ui/ux (player)] lasts 40 days
+
+
+
+
+[plan app ui/ux (seller)] is colored in Yellow/LightBlue
+[plan app ui/ux (seller)] starts 2023-07-20
+[plan app ui/ux (seller)] lasts 40 days
+
+[design app guide (seller)] is colored in GreenYellow/Green
+[design app guide (seller)] starts 2023-08-12
+[design app guide (seller)] lasts 40 days
+
+[dev app guide (seller)] is colored in Lavender/Green
+[dev app guide (seller)] starts 2023-09-01
+[dev app guide (seller)] lasts 50 days
+
+[test app guide (seller)] is colored in Fuchsia/FireBrick
+[test app guide (seller)] starts 2023-09-30
+[test app guide (seller)] lasts 35 days
+
+[dev app ui/ux (seller)] is colored in Lavender/Green
+[dev app ui/ux (seller)] starts 2023-08-12
+[dev app ui/ux (seller)] lasts 60 days
+
+[test app ui/ux (seller)] is colored in Fuchsia/FireBrick
+[test app ui/ux (seller)] starts 2023-09-12
+[test app ui/ux (seller)] lasts 40 days
+
+
+
+
+[plan admin ui/ux] is colored in Yellow/LightBlue
+[plan admin ui/ux] starts 2023-07-20
+[plan admin ui/ux] lasts 40 days
+
+[design admin guide] is colored in GreenYellow/Green
+[design admin guide] starts 2023-08-12
+[design admin guide] lasts 40 days
+
+[dev admin guide] is colored in Lavender/Coral
+[dev admin guide] starts 2023-09-01
+[dev admin guide] lasts 40 days
+
+[test admin guide] is colored in Fuchsia/FireBrick
+[test admin guide] starts 2023-09-30
+[test admin guide] lasts 30 days
+
+[dev admin ui/ux] is colored in Lavender/Coral
+[dev admin ui/ux] starts 2023-08-12
+[dev admin ui/ux] lasts 90 days
+
+[test admin ui/ux] is colored in Fuchsia/FireBrick
+[test admin ui/ux] starts 2023-09-12
+[test admin ui/ux] lasts 30 days
+
+
+
+
+[dev back-end structural design] is colored in Lavender/LightBlue
+[dev back-end structural design] starts 2023-06-12
+[dev back-end structural design] lasts 60 days
+
+
+[dev back-end api] is colored in Lavender/LightBlue
+[dev back-end api] starts 2023-06-12
+[dev back-end api] lasts 90 days
+
+[test back-end api] is colored in Fuchsia/FireBrick
+[test back-end api] starts 2023-08-12
+[test back-end api] lasts 50 days
+
+
+[dev app structural design (player)] is colored in Lavender/Green
+[dev app structural design (player)] starts 2023-06-12
+[dev app structural design (player)] lasts 50 days
+
+
+[dev app structural design (seller)] is colored in Lavender/Green
+[dev app structural design (seller)] starts 2023-06-12
+[dev app structural design (seller)] lasts 50 days
+
+
+[dev admin structural design] is colored in Lavender/Coral
+[dev admin structural design] starts 2023-06-12
+[dev admin structural design] lasts 60 days
+
+
+[dev previous] is colored in Lavender/LightBlue
+[dev previous] starts 2023-06-12
+[dev previous] lasts 30 days
+
+[dev infra & ci/cd] is colored in Lavender/LightBlue
+[dev infra & ci/cd] starts 2023-06-20
+[dev infra & ci/cd] lasts 90 days
+
+
+
+
+[plan 1.0] -> [plan app ui/ux (player)]
+[plan app ui/ux (player)] -> [design app guide (player)]
+[plan app ui/ux (player)] -> [dev app ui/ux (player)]
+[design app guide (player)] -> [dev app guide (player)]
+[dev app guide (player)] -> [test app guide (player)]
+[dev app ui/ux (player)] -> [test app ui/ux (player)]
+
+
+[plan 1.0] -> [plan app ui/ux (seller)]
+[plan app ui/ux (seller)] -> [design app guide (seller)]
+[plan app ui/ux (seller)]  -> [dev app ui/ux (seller)]
+[design app guide (seller)] -> [dev app guide (seller)]
+[dev app guide (seller)] -> [test app guide (seller)]
+[dev app ui/ux (seller)] -> [test app ui/ux (seller)]
+
+
+[plan 1.0] -> [plan admin ui/ux]
+[plan admin ui/ux]  -> [design admin guide]
+[plan admin ui/ux] -> [dev admin ui/ux]
+[design admin guide] -> [dev admin guide]
+[dev admin ui/ux] -> [test admin ui/ux]
+[dev admin guide] -> [test admin guide]
+
+
+[plan 1.0] -> [dev back-end structural design]
+[plan 1.0] -> [dev back-end api]
+[dev back-end api] -> [test back-end api]
+
+
+
+[plan 1.0] -> [dev app structural design (player)]
+[plan 1.0] -> [dev app structural design (seller)]
+[plan 1.0] -> [dev admin structural design]
+
+2023-05-01 to 2024-02-28 are named [End's committee]
+
+@endgantt

@@ -1,0 +1,55 @@
+@startuml
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+left to right direction
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+title 'MENU' Lottery Game Service ERD
+
+
+table( menu ) {
+    primary_key( id ) : varchar
+    column( type ): varchar
+    column( depth ): smallint
+    column( sort ): smallint
+    column( parent_id ): long
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( menu_language ) {
+    primary_key( menu_id ) : varchar
+    primary_key( language_code ) : varchar
+    column( title ): varchar
+    column( description ): varchar
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( menu_role ) {
+    primary_key( menu_id ) : varchar
+    primary_key( role_id ) : long
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+table( agent_menu_permission ) {
+    primary_key( employee_id ) : long
+    primary_key( menu_id ) : long
+    primary_key( permission_id ) : long
+    column( create_at ) : timestamp
+    column( update_at ) : timestamp
+}
+
+
+@enduml
