@@ -14,6 +14,10 @@ export class TcpRequest<T> {
     this.headers = headers;
   }
 
+  toString() {
+    return JSON.stringify(this);
+  }
+
   static from<T>(data: T, headers?: object) {
     return new TcpRequest<T>(data, headers);
   }
@@ -34,6 +38,10 @@ export class TcpPaginationRequest<T1, T2 = Pagination> {
     this.data = data;
     this.pagination = pagination;
     this.headers = headers;
+  }
+
+  toString() {
+    return JSON.stringify(this);
   }
 
   static from<T1, T2 = Pagination>(data: T1, pagination: T2, headers?: object) {

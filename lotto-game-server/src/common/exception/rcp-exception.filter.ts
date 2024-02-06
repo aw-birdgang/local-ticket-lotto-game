@@ -1,14 +1,13 @@
-import { ArgumentsHost, Catch, RpcExceptionFilter } from "@nestjs/common";
+import {ArgumentsHost, Catch, Logger, RpcExceptionFilter} from "@nestjs/common";
 import { RpcException } from "@nestjs/microservices";
 import { Observable, throwError } from "rxjs";
 
 @Catch(RpcException)
 export class MicroserviceRcpExceptionFilter implements RpcExceptionFilter<RpcException> {
+  private readonly logger = new Logger(MicroserviceRcpExceptionFilter.name);
   catch(exception: RpcException, host: ArgumentsHost): Observable<any> {
     const ctx = host.switchToRpc();
-    // console.log("ctx.getData -> ", ctx.getData());
-    console.log("ctx.getContext -> ", ctx.getContext());
-    // console.log("exception.getError -> ", exception.getError());
+    this.logger.log("ctx.getContext -> ", ctx.getContext());
     return throwError(() => exception.getError());
   }
 }

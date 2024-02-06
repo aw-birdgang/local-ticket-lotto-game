@@ -1,9 +1,15 @@
-import {Module} from '@nestjs/common';
-import {AppController} from './app.controller';
-import {AppService} from './app.service';
+import {forwardRef, Module} from '@nestjs/common';
+import {CommonModule} from "./common/common.module";
+import {TicketModule} from "./ticket/ticket.module";
+import {GameModule} from "./game/game.module";
+import {FinanceModule} from "./finance/finance.module";
 
 @Module({
-  controllers: [AppController],
-  providers: [AppService,],
+    imports: [
+        forwardRef(() => CommonModule),
+        forwardRef(() => GameModule),
+        forwardRef(() => TicketModule),
+        forwardRef(() => FinanceModule),
+    ],
 })
 export class AppModule {}

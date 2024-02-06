@@ -5,7 +5,7 @@ import { LanguageKey } from "../model/language-key.entity";
 import { LanguageValue } from "../model/language-value.entity";
 import { LanguageKeyValueDto } from "../model/language-key-value.dto";
 import { isEmpty } from "class-validator";
-import { BusinessException } from "../exception/business-exception";
+import { BusinessRpcException } from "../exception/business-rpc-exception";
 import { ErrorCodes } from "../exception/error.enum";
 import { LanguageCode } from "../model/common.enum";
 
@@ -51,20 +51,20 @@ export class LanguageService {
       const languageKeyResult = await this.languageKeyRepository.insert(LanguageKey.from(null, tableName, columnName));
       // console.log("saveLanguageKeyValue  languageKeyResult -> ", languageKeyResult);
       if (isEmpty(languageKeyResult) || isEmpty(languageKeyResult.identifiers) || isEmpty(languageKeyResult.identifiers[0])) {
-        throw new BusinessException(ErrorCodes.BUS_ERROR_008);
+        throw new BusinessRpcException(ErrorCodes.BUS_ERROR_008);
       }
       languageId = languageKeyResult.identifiers[0]["languageId"];
       const languageValueResult = await this.languageValueRepository.insert(LanguageValue.from(languageId, languageCode, text));
       // console.log("saveLanguageKeyValue  languageValueResult -> ", languageValueResult);
       if (isEmpty(languageValueResult) || isEmpty(languageValueResult.identifiers) || isEmpty(languageValueResult.identifiers[0])) {
-        throw new BusinessException(ErrorCodes.BUS_ERROR_008);
+        throw new BusinessRpcException(ErrorCodes.BUS_ERROR_008);
       }
       return LanguageKeyValueDto.from(languageId, tableName, columnName, languageCode, text);
     } else {
       const languageValueResult = await this.languageValueRepository.update({ languageId, languageCode }, { text });
       // console.log("saveLanguageKeyValue  languageValueResult -> ", languageValueResult);
       if (isEmpty(languageValueResult) || languageValueResult.affected <= 0) {
-        throw new BusinessException(ErrorCodes.BUS_ERROR_009);
+        throw new BusinessRpcException(ErrorCodes.BUS_ERROR_009);
       }
       return LanguageKeyValueDto.from(languageId, tableName, columnName, languageCode, text);
     }

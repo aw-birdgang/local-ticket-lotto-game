@@ -5,7 +5,6 @@ import { WinningTicketDto } from "./winning-ticket.dto";
 import { isEmpty, isNotEmpty } from "class-validator";
 import { BundleTicketDto } from "./bundle-ticket.dto";
 import {TicketCurrencyDto} from "./ticket-currency.dto";
-import {PlayerDto} from "../../player/dto/player.dto";
 import {RoundDto} from "../../game/dto/round.dto";
 
 export class TicketDetailsDto {
@@ -25,19 +24,15 @@ export class TicketDetailsDto {
   roundDto: RoundDto;
 
   @ApiProperty()
-  playerDto: PlayerDto;
-
-  @ApiProperty()
   bundleTicketDto: BundleTicketDto[];
 
   static from(
-    ticketDto: TicketDto,
-    ticketCurrencyDto: TicketCurrencyDto,
-    issuedTicketDto: IssuedTicketDto,
-    winningTicketDto: WinningTicketDto,
-    roundDto?: RoundDto,
-    playerDto?: PlayerDto,
-    bundleTicketDto?: BundleTicketDto[],
+      ticketDto: TicketDto,
+      ticketCurrencyDto: TicketCurrencyDto,
+      issuedTicketDto: IssuedTicketDto,
+      winningTicketDto: WinningTicketDto,
+      roundDto?: RoundDto,
+      bundleTicketDto?: BundleTicketDto[],
   ) {
     if (isEmpty(ticketDto)) {
       return null;
@@ -52,9 +47,6 @@ export class TicketDetailsDto {
     }
     if (isNotEmpty(winningTicketDto)) {
       ticketDetailsDto.winningTicketDto = winningTicketDto;
-    }
-    if (isNotEmpty(playerDto)) {
-      ticketDetailsDto.playerDto = playerDto;
     }
     if (isNotEmpty(roundDto)) {
       ticketDetailsDto.roundDto = roundDto;

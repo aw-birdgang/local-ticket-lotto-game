@@ -10,7 +10,6 @@ export class ClientRpcException extends RpcException {
         objectOrError = errorMessage;
       }
     }
-    console.log("ClientRpcException -> ", objectOrError);
     super(objectOrError);
   }
 }
