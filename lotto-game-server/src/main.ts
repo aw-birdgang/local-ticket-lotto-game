@@ -61,7 +61,35 @@ async function bootstrap() {
     exclude: [{ path: "api/health", method: RequestMethod.GET }]
   });
 
-  app.connectMicroservice<MicroserviceOptions>(getMicroserviceOptions(Transport.KAFKA));
+  // app.connectMicroservice<MicroserviceOptions>(getMicroserviceOptions(Transport.KAFKA));
+
+  let clientConfig = {
+    clientId: process.env.KAFKA_CLIENT_PREFIX,
+    brokers: process.env.KAFKA_BROKER_URL.split(",").sort(() => Math.random() - 0.5)
+  }
+  if (process.env.NODE_ENV !== "local") {
+    clientConfig = {...clientConfig,
+    };
+  }
+  // return {
+  //   transport: Transport.KAFKA,
+  //   options: {
+  //     client: clientConfig,
+  //     consumer: {
+  //       groupId: process.env.KAFKA_CONSUMER_GROUP_PREFIX
+  //     }
+  //   }
+  // }
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.KAFKA,
+    options: {
+      client: clientConfig,
+      consumer: {
+        groupId: process.env.KAFKA_CONSUMER_GROUP_PREFIX
+      }
+    }
+  });
   await app.startAllMicroservices();
   await app.listen(Number(process.env.SERVER_PORT));
 }
