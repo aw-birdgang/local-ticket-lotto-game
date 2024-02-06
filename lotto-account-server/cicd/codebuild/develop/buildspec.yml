@@ -1,0 +1,60 @@
+version: 0.2
+run-as: root
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+  pre_build:
+    commands:
+      - echo AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+      - echo AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
+      - echo IMAGE_REPO_NAME=$IMAGE_REPO_NAME
+      - echo CODEBUILD_BUILD_NUMBER=$CODEBUILD_BUILD_NUMBER
+      - echo CODEBUILD_RESOLVED_SOURCE_VERSION=$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - COMMIT_ID=$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - COMMIT_ID_SHORT=${CODEBUILD_RESOLVED_SOURCE_VERSION::7}
+#     tagging for env: develop(branch name)
+      - TAG_BUILD_NO=build-no-$CODEBUILD_BUILD_NUMBER
+      - TAG_DEPLOY_VERSION=$DEPLOY_ENV-$CODEBUILD_BUILD_NUMBER
+      - TAG_DEPLOY_ENV_IMAGE=$DEPLOY_ENV-$IMAGE_TAG
+      - echo COMMIT_ID_SHORT=${COMMIT_ID_SHORT}
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - aws s3 cp s3://$S3_LOTTO_DOTENV_BUCKET_NAME/lotto-lanka-account-server/.env.$DEPLOY_ENV .env
+      - |
+        cat <<EOF >>.env
+
+        COMMIT_ID=$COMMIT_ID
+        COMMIT_ID_SHORT=$COMMIT_ID_SHORT
+        EOF
+      - docker build -t $IMAGE_REPO_NAME:$TAG_DEPLOY_ENV_IMAGE -f "${DOCKER_FILE_PATH}" .
+      - docker tag $IMAGE_REPO_NAME:$TAG_DEPLOY_ENV_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$TAG_DEPLOY_ENV_IMAGE
+      - docker tag $IMAGE_REPO_NAME:$TAG_DEPLOY_ENV_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker tag $IMAGE_REPO_NAME:$TAG_DEPLOY_ENV_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$COMMIT_ID_SHORT
+      - docker tag $IMAGE_REPO_NAME:$TAG_DEPLOY_ENV_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$TAG_BUILD_NO
+      - docker tag $IMAGE_REPO_NAME:$TAG_DEPLOY_ENV_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$TAG_DEPLOY_VERSION
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$TAG_DEPLOY_ENV_IMAGE
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$COMMIT_ID_SHORT
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$TAG_BUILD_NO
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$TAG_DEPLOY_VERSION
+      - echo Writing image definitions file...
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
+  discard-paths: yes
+
+cache:
+  paths:
+    - 'node_modules/**/*' # Cache `node_modules` for faster `yarn` or `npm i`
